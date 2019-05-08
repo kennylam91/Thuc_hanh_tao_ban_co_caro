@@ -39,14 +39,14 @@
     function elementChange(id) { //Tra gia tri x,o cho o
         let zValue;
 
-        if (count % 2 == 0) zValue = "x";
+        if (count % 2 === 0) zValue = "x";
         else zValue = "o";
         // console.log(count);
         document.getElementById(id).innerHTML = zValue;
         document.getElementById(id).classList.add("unselectable");
 
         count++;
-        document.getElementById(id).removeEventListener(onclick,elementChange());
+        document.getElementById(id).removeAttribute("onclick");
     }
 
 </script>
