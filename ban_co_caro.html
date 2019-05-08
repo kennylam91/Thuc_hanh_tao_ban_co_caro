@@ -7,9 +7,13 @@
 <body>
 <script>
     let rowNumber = Number(prompt("Nhap so hang cua ban co Caro: "));
-    let columnNumber =Number(prompt("Nhap so bot cua ban co Caro: "))
+    let columnNumber =Number(prompt("Nhap so bot cua ban co Caro: "));
     let count = 0;
-    let arr = [];
+    let arr = []; // Tạo 1 mảng 2 chiều để lưu giá trị x,o
+    for(i=0;i<rowNumber;i++){
+        arr[i]=[];
+    }
+    // arr.fill(new Array((columnNumber)));
     let idtext = [];
 
     function rowDefine(x, y) { // Hàm tạo định dạng của các ô trong 1 hàng
@@ -47,7 +51,13 @@
 
         count++;
         document.getElementById(id).removeAttribute("onclick");
+        console.log(zValue);
+        console.log(id[0]);
+        console.log(id[2]);
+        arr[id[0]][id[2]]=zValue;
+        console.log(arr);
     }
+
 
 </script>
 <style>
