@@ -2,19 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Bảng cửu chương</title>
+    <title>Game Cờ Caro</title>
 </head>
 <body>
 <script>
     let rowNumber = Number(prompt("Nhap so hang cua ban co Caro: "));
-    let columnNumber =Number(prompt("Nhap so bot cua ban co Caro: "));
-    let count = 0;
+    let columnNumber = Number(prompt("Nhap so bot cua ban co Caro: "));
+    let count = 0, id1, id2;
     let arr = []; // Tạo 1 mảng 2 chiều để lưu giá trị x,o
-    for(i=0;i<rowNumber;i++){
-        arr[i]=[];
+    for (i = 0; i < rowNumber; i++) {
+        arr[i] = [];
+        for (j = 0; j < columnNumber; j++) {
+            arr[i][j] = "";
+        }
     }
+
+    console.log(arr);
     // arr.fill(new Array((columnNumber)));
-    let idtext = [];
+    let idtext = ["", ""];
 
     function rowDefine(x, y) { // Hàm tạo định dạng của các ô trong 1 hàng
         //Ô trong <table> cần có dạng <td>i * x= ...</td>, biến x đại diện cho hàng, colunm đại diện cho số cột
@@ -23,12 +28,13 @@
             idtext = [String(x), String(i)];
             result2 += "<td onclick= 'elementChange(this.id)' id='" + idtext + "'></td>";
         }
+        console.log("idtext=" + idtext);
         // console.log(result2);
         return result2;
 
     }
 
-    console.log(rowDefine(2));
+    console.log(idtext);
 
     function tableDefine(x) { //Hàm tạo định dạng của các hàng trong bảng
         result3 = "<tr>" + "</tr>";// Khởi tạo biến kết quả với hàng tiêu đề
@@ -37,27 +43,124 @@
         }
         return result3;
     }
+
     // console.log(rowDefine(2));
-    let tableCss = '<table border="1" cellspacing="0""><caption><h1>Game co caro</h1></caption>';
+    let tableCss = '<table border="1" cellspacing="0""><caption><h1>GAME CỜ CARO</h1></caption>';
     document.write(tableCss + tableDefine(rowNumber) + "</table>");
+
     function elementChange(id) { //Tra gia tri x,o cho o
         let zValue;
 
-        if (count % 2 === 0) zValue = "x";
-        else zValue = "o";
+        if (count % 2 === 0) zValue = "X";
+        else zValue = "O";
         // console.log(count);
         document.getElementById(id).innerHTML = zValue;
         document.getElementById(id).classList.add("unselectable");
 
         count++;
-        document.getElementById(id).removeAttribute("onclick");
-        console.log(zValue);
-        console.log(id[0]);
-        console.log(id[2]);
-        arr[id[0]][id[2]]=zValue;
+
+
+        console.log("id= " + id);
+        id2 = stringConvert(id);
+        id1 = parseInt(id); // lấy số đầu tiên trước dấu phẩy của id
+        console.log("id1= " + id1 + "id2=" + id2);
+        arr[id1][id2] = zValue;
         console.log(arr);
+        checkResult(arr);
+        document.getElementById(id).removeAttribute("onclick");
+
     }
 
+    function stringConvert(stringInput) { //StringInput có dạng 12,34, hàm này sẽ trả về số 34
+        let arrC = [];
+        let result = "";
+        for (i = 0; i < 10; i++) {
+            arrC[i] = stringInput[i];
+        }
+        console.log(arrC);
+        let index1 = arrC.indexOf(",");
+        for (j = index1 + 1; j < 10; j++) {
+            result += arrC[j];
+        }
+        console.log(result);
+        return (parseInt(result));
+
+    }
+
+    function checkResult(arr) {
+
+        for (i = 4; i < rowNumber; i++) {
+            for (j = 0; j < columnNumber; j++) {
+                if ((arr[i][j]) && (arr[i][j] === arr[i - 1][j]) && (arr[i - 1][j] === arr[i - 2][j]) && (arr[i - 2][j] === arr[i - 3][j])
+                    && (arr[i - 3][j] === arr[i - 4][j])) {
+
+                    console.log(i + "," + j);
+                    document.getElementById(i + "," + j).classList.add("winning");
+                    document.getElementById(i - 1 + "," + j).classList.add("winning");
+                    document.getElementById(i - 2 + "," + j).classList.add("winning");
+                    document.getElementById(i - 3 + "," + j).classList.add("winning");
+                    document.getElementById(i - 4 + "," + j).classList.add("winning");
+                    alert(arr[i][j] + " đã thắng!!!");
+                    break;
+
+                }
+
+            }
+        }
+        for (i = 0; i < rowNumber; i++) {
+            for (j = 4; j < columnNumber; j++) {
+                if ((arr[i][j]) && (arr[i][j] === arr[i][j - 1]) && (arr[i][j - 1] === arr[i][j - 2]) && (arr[i][j - 2] === arr[i][j - 3])
+                    && (arr[i][j - 3] === arr[i][j - 4])) {
+
+                    document.getElementById(i + "," + j).classList.add("winning");
+                    document.getElementById(i + "," + (j - 1)).classList.add("winning");
+                    document.getElementById(i + "," + (j - 2)).classList.add("winning");
+                    document.getElementById(i + "," + (j - 3)).classList.add("winning");
+                    document.getElementById(i + "," + (j - 4)).classList.add("winning");
+                    alert(arr[i][j] + " đã thắng!!!");
+                    console.log(i + "," + j);
+                    break;
+
+
+                }
+            }
+        }
+        for (i = 4; i < rowNumber; i++) {
+            for (j = 4; j < columnNumber; j++) {
+                if ((arr[i][j]) && (arr[i][j] === arr[i - 1][j - 1]) && (arr[i][j] === arr[i - 2][j - 2]) &&
+                    (arr[i][j] === arr[i - 3][j - 3]) && (arr[i][j] === arr[i - 4][j - 4])) {
+
+                    document.getElementById((i - 1) + "," + (j - 1)).classList.add("winning");
+                    document.getElementById(i + "," + j).classList.add("winning");
+                    document.getElementById((i - 2) + "," + (j - 2)).classList.add("winning");
+                    document.getElementById((i - 3) + "," + (j - 3)).classList.add("winning");
+                    document.getElementById((i - 4) + "," + (j - 4)).classList.add("winning");
+
+                    alert(arr[i][j] + " đã thắng!!!");
+                    console.log(i + "," + j);
+                    break;
+
+                }
+            }
+        }
+        for (i = 4; i < rowNumber; i++) {
+            for (j = 0; j < columnNumber; j++) {
+                if ((arr[i][j]) && (arr[i][j] === arr[i - 1][j + 1]) && (arr[i][j] === arr[i - 2][j + 2])
+                    && (arr[i][j] === arr[i - 3][j + 3]) && (arr[i][j] === arr[i - 4][j + 4])) {
+
+                    document.getElementById(i + "," + j).classList.add("winning");
+                    document.getElementById((i - 1) + "," + (j + 1)).classList.add("winning");
+                    document.getElementById((i - 2) + "," + (j + 2)).classList.add("winning");
+                    document.getElementById((i - 3) + "," + (j + 3)).classList.add("winning");
+                    document.getElementById((i - 4) + "," + (j + 4)).classList.add("winning");
+                    alert(arr[i][j] + " đã thắng!!!");
+                    console.log(i + "," + j);
+                    break;
+
+                }
+            }
+        }
+    }
 
 </script>
 <style>
@@ -66,13 +169,19 @@
         width: 50px;
         height: 50px;
         font-weight: bold;
-        font-size: 1.2rem;
+        font-size: 2rem;
     }
-    .unselectable{
+
+    .unselectable {
         background-color: #ddd;
         cursor: not-allowed;
     }
 
+    .winning {
+        background-color: red;
+        color:white;
+
+    }
 </style>
 </body>
 </html>
